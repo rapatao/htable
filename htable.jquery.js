@@ -10,6 +10,9 @@
         },
         loadCallback: function(element, pos) {
             alert('not implemented - loadCallback');
+        },
+        validateCallback: function(element, pos, loadObject) {
+            alert('not implemented - validateCallback');
         }
     };
 
@@ -73,6 +76,23 @@
                     self.addElement(value);
                 });
             }
+        },
+
+        validate: function() {
+            var self = this;
+            var result = true;
+            $.each($(this.element).find('[htable-content]'),
+                function(pos, element) {
+                    if (!$(element).is(':empty')) {
+                        var obj = self.settings.loadCallback.call(self, element, pos);
+                        var valid = self.settings.validateCallback.call(self, element, pos, obj);
+                        if (!valid) {
+                            result = false;
+                        }
+                    }
+                }
+            );
+            return result;
         }
     });
 
@@ -84,7 +104,8 @@
                     $.data(this, 'plugin_' + pluginName, new Plugin(this, options));
                 }
             });
-        } else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
+        } else if (typeof options === 'string' && options[0] !== '_' &&
+            (options === 'load' || options === 'fill' || options === 'validate' || options === 'destroy')) {
             var returns;
             this.each(function() {
                 var instance = $.data(this, 'plugin_' + pluginName);
@@ -99,4 +120,4 @@
         }
     };
 
-})( jQuery, window, document );
+})(jQuery, window, document);
