@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>HTABLE</title>
+    <style>
+    table, div {
+        border-width: 1px;
+        border-style: solid;
+    }
+    </style>
+</head>
+<body>
+
+<script charset="utf-8" src="jquery-1.10.2.min.js"></script>
+<script charset="utf-8" src="htable.jquery.js"></script>
+
+<table id="ecHeader">
+    <tr>
+        <td htable-col>
+            <div>
+                <button htable-action-add>+</button>
+                <button htable-action-del>-</button>
+            </div>
+            <div htable-content></div>
+        </td>
+    </tr>
+</table>
+
+
+<script type="text/javascript">
+    jQuery(function() {
+
+        var counter = 1;
+        var config = {
+            addCallback: function(element, value) {
+                $(element).append('[content ');
+                $(element).append(counter++);
+                $(element).append(' ] ');
+                if (value != null) {
+                    $(element).append('- value: ');
+                    $(element).append(value.v);
+                }
+
+            },
+            loadCallback: function(element, pos) {
+                var result = {};
+                result.position = pos;
+                return result;
+            }
+        }
+
+        $('#ecHeader').htable(config);
+
+        var data = [
+            { "v": "1"},
+            { "v": "2"},
+            { "v": "3"},
+            { "v": "4"},
+            { "v": "5"},
+            { "v": "6"}
+        ];
+        $('#ecHeader').htable('fill', data);
+
+        alert($('#ecHeader').htable('load').length);
+    });
+</script>
+
+
+</body>
+
+</html>
